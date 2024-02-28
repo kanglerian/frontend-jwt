@@ -1,39 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { increment } from '../../functions/auth';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const loginFunc = (e) => {
-    e.preventDefault();
+  const token = localStorage.getItem('token');
+  const dispatch = useDispatch();
 
-    let data = {
+  const loginFunc = async (e) => {
+    e.preventDefault();
+    await axios.post(`${process.env.BACKEND_SERVER}/auth/login`, {
       email: email,
       password: password
-    }
-    fetch(`http://localhost:3031/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(data),
     })
-    .then((response) => {
-      if(!response.ok){
-        alert('Network error.')
-      }
-      return response.json();
-    })
-    .then(() => {
-      navigate("/dashboard")
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        dispatch(increment(response.data.data.token))
+        navigate('/dashboard')
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
+
+  useEffect(() => {
+    if(token){
+      navigate('/dashboard');
+    }
+  }, []);
 
   return (
     <section>
