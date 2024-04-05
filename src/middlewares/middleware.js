@@ -21,7 +21,7 @@ const forbiddenAccess = () => {
   }
   const decoded = jwtDecode(token);
   const expirationTimeMillis = decoded.exp * 1000;
-  if (now <= expirationTimeMillis) {
+  if (now < expirationTimeMillis) {
     window.history.back();
   }
 }
