@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
+  const [applicant, setApplicant] = useState({});
 
   const getUser = async () => {
     checkTokenExpiration();
@@ -16,7 +17,9 @@ const Dashboard = () => {
       }
     })
       .then((response) => {
-        setUser(response.data);
+        console.log(response.data)
+        setUser(response.data.user);
+        setApplicant(response.data.applicant);
       })
       .catch((error) => {
         if (error.response.status == 401) {
@@ -57,7 +60,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <p>Selamat datang, {user.name}</p>
+      <p>Selamat datang, {user.name} | PMB {applicant.pmb}</p>
       <button onClick={logoutFunc} type='button'>Logout</button>
     </div>
   )
