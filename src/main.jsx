@@ -9,12 +9,8 @@ import {
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 
-import store from './app/store';
-import { Provider } from 'react-redux';
-
 import Login from './pages/Auth/Login';
 import Dashboard from './pages/Dashboard';
-import Users from './pages/Users';
 
 const router = createBrowserRouter([
   {
@@ -25,14 +21,10 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard/>
   },
-  {
-    path: "/users",
-    element: <Users/>
-  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
+  <React.StrictMode>
     <RouterProvider router={router} />
-  </Provider>,
+  </React.StrictMode>,
 )

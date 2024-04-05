@@ -1,36 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { increment } from '../../functions/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { checkTokenExpiration } from '../../middlewares/middleware';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('token');
-  const dispatch = useDispatch();
-
   const loginFunc = async (e) => {
     e.preventDefault();
-    await axios.post(`${process.env.BACKEND_SERVER}/auth/login`, {
+    await axios.post(`${process.env.BACKEND_SERVER}/api/auth/psikotest/login`, {
       email: email,
       password: password
     })
       .then((response) => {
-        dispatch(increment(response.data.data.token))
+        localStorage.setItem('token', response.data.access_token)
+        alert(response.data.message)
         navigate('/dashboard')
       })
       .catch((error) => {
-        console.log(error);
+        if(error.response.status == 401){
+          return alert(error.response.data.message);
+        } else {
+          console.log(error);
+        }
       });
   }
 
   useEffect(() => {
-    if(token){
-      navigate('/dashboard');
-    }
+    checkTokenExpiration();
   }, []);
 
   return (
