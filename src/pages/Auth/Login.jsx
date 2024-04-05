@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { checkTokenExpiration } from '../../middlewares/middleware';
+import { checkTokenExpiration, forbiddenAccess } from '../../middlewares/middleware';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,6 +30,7 @@ const Login = () => {
 
   useEffect(() => {
     checkTokenExpiration();
+    forbiddenAccess();
   }, []);
 
   return (
